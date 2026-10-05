@@ -1,15 +1,8 @@
 # go.carveyourbody.com
 
-Every folder here is a page on go.carveyourbody.com.
+Pages are put up from the CYB portal, on the Web Pages page. Do not edit here by hand.
 
-## Add a new page
-1. Click **Add file** → **Upload files**.
-2. Name your file `index.html`. Drag in the folder that holds it (for example a folder called `apply`).
-3. Click **Commit changes**.
-4. Wait 1 minute. The page is live at `go.carveyourbody.com/apply`.
-
-## Change a page
-Open the folder, click **Add file** → **Upload files**, drag in the new `index.html`, click **Commit changes**.
-
-## Do not touch
-`CNAME`, `.nojekyll` and the top-level `index.html`. They keep the address working.
+- Every folder is one page: `go.carveyourbody.com/<folder>/`.
+- `drafts/<name>/` holds a page waiting for Fahim's approval.
+- Each change is one commit: "Draft name: why", "Live name: why", "Rollback ...", "Discard ...", with a "Who:" line.
+- Do not touch `CNAME`, `robots.txt` or the top-level `index.html`.
