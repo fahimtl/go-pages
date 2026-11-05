@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://soccer-split.fahiimiislam.workers.dev; base-uri 'none'; form-action 'none'"><title>Soccer split</title>
+<style>
+:root{--bg:#f6f7f5;--card:#fff;--ink:#16201a;--mute:#5d6a62;--line:#dfe4df;--go:#14804a;--goink:#fff;--soft:#e7f3ec;--bad:#b3261e}
+@media (prefers-color-scheme:dark){:root{--bg:#101512;--card:#18201b;--ink:#eef3ef;--mute:#9aa8a0;--line:#2b352f;--go:#3ccf83;--goink:#07190f;--soft:#1c3226;--bad:#ff8a80}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:520px;margin:0 auto;padding:20px 16px 48px}h1{font-size:15px;font-weight:600;color:var(--mute);margin:0 0 4px}h2{font-size:17px;margin:0 0 10px}
+.big{font-size:27px;font-weight:700;line-height:1.2;margin:0 0 4px}.sub{color:var(--mute);margin:0}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden;margin:12px 0 6px}.bar i{display:block;height:100%;background:var(--go);width:0;transition:width .3s}
+.names{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.n{min-height:48px;padding:10px;border:1px solid var(--line);border-radius:11px;background:transparent;color:var(--ink);font:inherit;font-weight:600;cursor:pointer;overflow-wrap:anywhere}.n.me{background:var(--soft);border-color:var(--go)}
+button.go{width:100%;min-height:48px;border:0;border-radius:11px;background:var(--go);color:var(--goink);font:inherit;font-weight:700;cursor:pointer;margin-top:10px}button.ghost{min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:11px;background:transparent;color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1 1 140px}label{display:block;font-size:13px;color:var(--mute);margin:10px 0 4px}input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}textarea{min-height:84px;resize:vertical}
+.tick{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 2px;border-top:1px solid var(--line);color:var(--ink);font-size:16px;margin:0}.tick:first-child{border-top:0}.tick input{width:22px;height:22px;flex:none;accent-color:var(--go)}.tick span{flex:1;overflow-wrap:anywhere}.tick em{font-style:normal;font-size:13px;color:var(--mute)}
+details{border-top:1px solid var(--line);padding:10px 0}details:first-of-type{border-top:0}summary{cursor:pointer;font-weight:600}#say{min-height:22px;margin:10px 0 0;color:var(--go);font-weight:600}#say.bad{color:var(--bad)}[hidden]{display:none!important}
+</style></head><body><main>
+<h1>Soccer split</h1>
+<section id="top"><p class="big" id="head">Loading…</p><p class="sub" id="line"></p><div class="bar" id="barw" hidden><i id="bar"></i></div><p class="sub" id="count"></p></section>
+<section class="card" id="pick" hidden><h2>Paid? Tap your name</h2><div class="names" id="names"></div><p class="sub" style="margin-top:10px;font-size:14px">Nobody can see who has not paid.</p></section>
+<p id="say" role="status"></p>
+<div id="book" hidden>
+<section class="card"><h2>Share with the group</h2><div class="row"><button class="ghost" id="copylink" type="button">Copy link</button><button class="ghost" id="copymsg" type="button">Copy the message</button></div></section>
+<section class="card"><h2>Who has paid</h2><div id="ticks"></div></section>
+<section class="card"><h2>New week</h2><label for="wl">When</label><input id="wl" maxlength="40" placeholder="Sunday 7pm"><div class="row"><div><label for="wc">Pitch cost</label><input id="wc" inputmode="decimal" placeholder="120"></div><div><label for="wr">Money sign</label><input id="wr" maxlength="3" value="$"></div></div><label>Who is in</label><div id="wn"></div><button class="go" id="wgo" type="button">Start this week</button></section>
+<section class="card"><h2>Your regulars</h2><label for="rn">One first name a line</label><textarea id="rn"></textarea><label for="rp">Pay who (your first name)</label><input id="rp" maxlength="22"><button class="ghost" id="rgo" type="button" style="margin-top:10px;width:100%">Save regulars</button></section>
+<section class="card"><h2>Past weeks</h2><div id="hist"></div></section>
+</div></main>
+<script>
+(function(){
+var g='main',API='https://soccer-split.fahiimiislam.workers.dev/',key=(/[#&]b=([a-z2-9]+)/.exec(location.hash)||[])[1]||'',D=null,el=function(i){return document.getElementById(i);};
+var money=function(c,n){return c+(n%1?Number(n).toFixed(2):n);};
+var say=function(t,bad){var s=el('say');s.textContent=t||'';s.className=bad?'bad':'';};
+var mine=function(){try{return JSON.parse(localStorage.getItem('soccer-'+g)||'{}');}catch(e){return {};}},keep=function(o){try{localStorage.setItem('soccer-'+g,JSON.stringify(o));}catch(e){}};
+var api=function(p,o){o=o||{};o.headers=Object.assign({'content-type':'application/json'},key?{'x-soccer-key':key}:{},o.headers||{});return fetch(API+p,o).then(function(r){return r.json();});};
+var post=function(p,b){return api(p,{method:'POST',body:JSON.stringify(b)});};
+var copy=function(t,done){var ok=function(){say(done);},no=function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){say('Could not copy. Press and hold to copy it.',1);}a.remove();};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,no);else no();};
+var link=function(){return 'https://go.carveyourbody.com/soccer';};
+function draw(){
+ var w=D.week;
+ if(!w){el('head').textContent=D.booker?'Set up your first week':'No game set yet';el('line').textContent=D.booker?'Add your regulars below, then start a week.':'Check back once it is booked.';}
+ else{el('head').textContent=money(w.cur,w.each)+' each';el('line').textContent=w.label+' · '+money(w.cur,w.cost)+' split by '+w.count+(D.pay?' · Pay '+D.pay:'');el('barw').hidden=false;el('bar').style.width=(w.count?Math.round(w.paid/w.count*100):0)+'%';el('count').textContent='Paid '+w.paid+' of '+w.count;}
+ var P=el('pick');P.hidden=!w;
+ if(w){var me=mine(),N=el('names');N.textContent='';w.names.forEach(function(n){var b=document.createElement('button');b.type='button';b.className='n'+(me[w.id]===n?' me':'');b.textContent=(me[w.id]===n?'✓ ':'')+n;b.onclick=function(){if(me[w.id]===n){say('You are already marked paid, '+n+'.');return;}if(!confirm('Mark '+n+' as paid?'))return;b.disabled=true;post('paid',{name:n}).then(function(r){b.disabled=false;if(!r.ok){say(r.error||'Not saved. Try again.',1);return;}var m=mine();m[w.id]=n;keep(m);say('Thanks, '+n+'. You are marked paid.');load();}).catch(function(){b.disabled=false;say('Not saved. Check your connection and try again.',1);});};N.appendChild(b);});}
+ el('book').hidden=!D.booker;if(D.booker)drawBook();
+}
+function row(h,w,n,on){var l=document.createElement('label');l.className='tick';var c=document.createElement('input');c.type='checkbox';c.checked=on;var s=document.createElement('span');s.textContent=n;l.appendChild(c);l.appendChild(s);if(on&&w.paid[n]){var e=document.createElement('em');e.textContent=new Date(w.paid[n]).toLocaleDateString(undefined,{month:'short',day:'numeric'});l.appendChild(e);}c.onchange=function(){post('book',{action:'tick',week:w.id,name:n,paid:c.checked}).then(function(r){if(!r.ok)say(r.error,1);load();});};h.appendChild(l);}
+function drawBook(){
+ var H=D.history||[],T=el('ticks');T.textContent='';
+ if(H[0])H[0].in.forEach(function(n){row(T,H[0],n,!!H[0].paid[n]);});else T.textContent='No week yet.';
+ var R=el('rn');if(document.activeElement!==R&&!R.dataset.t){R.value=(D.regulars||[]).join('\n');}if(document.activeElement!==el('rp'))el('rp').value=D.pay||'';
+ var W=el('wn'),was={};[].forEach.call(W.querySelectorAll('input'),function(c){was[c.value]=c.checked;});W.textContent='';(D.regulars||[]).forEach(function(n){var l=document.createElement('label');l.className='tick';var c=document.createElement('input');c.type='checkbox';c.value=n;c.checked=n in was?was[n]:true;var s=document.createElement('span');s.textContent=n;l.appendChild(c);l.appendChild(s);W.appendChild(l);});
+ var Y=el('hist');Y.textContent='';H.slice(1).forEach(function(w){var d=document.createElement('details'),s=document.createElement('summary'),n=Object.keys(w.paid).length;s.textContent=w.label+' · paid '+n+' of '+w.in.length;d.appendChild(s);var b=document.createElement('div');w.in.forEach(function(x){row(b,w,x,!!w.paid[x]);});d.appendChild(b);Y.appendChild(d);});if(H.length<2)Y.textContent='None yet.';
+}
+function load(){return api('week').then(function(r){if(!r.ok){el('head').textContent='This link does not work';el('line').textContent='Ask the person who booked for the right one.';return;}D=r;if(key&&!r.booker)say('That booker link is not right.',1);draw();}).catch(function(){say('Could not load. Check your connection.',1);});}
+el('copylink').onclick=function(){copy(link(),'Link copied.');};
+el('copymsg').onclick=function(){var w=D.week;if(!w){say('Start a week first.',1);return;}copy(w.label+', '+money(w.cur,w.each)+' each'+(D.pay?', pay '+D.pay:'')+'. Tap your name once you have paid:\n'+link(),'Message copied.');};
+el('rn').oninput=function(){this.dataset.t='1';};
+el('rgo').onclick=function(){post('book',{action:'regulars',names:el('rn').value.split('\n'),pay:el('rp').value}).then(function(r){if(r.ok){delete el('rn').dataset.t;say('Regulars saved.');load();}else say(r.error,1);}).catch(function(){say('Not saved. Try again.',1);});};
+el('wgo').onclick=function(){var who=[].filter.call(el('wn').querySelectorAll('input'),function(c){return c.checked;}).map(function(c){return c.value;});post('book',{action:'week',label:el('wl').value,cost:el('wc').value,cur:el('wr').value,in:who}).then(function(r){if(r.ok){say('Week started. Copy the message for the group.');load();}else say(r.error,1);}).catch(function(){say('Not saved. Try again.',1);});};
+load();setInterval(function(){if(!document.hidden&&!D||!document.hidden&&!D.booker)load();},30000);
+})();
+</script></body></html>
