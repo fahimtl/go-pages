@@ -15,7 +15,8 @@ button.go{width:100%;min-height:48px;border:0;border-radius:11px;background:var(
 .tick{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 2px;border-top:1px solid var(--line);color:var(--ink);font-size:16px;margin:0}.tick:first-child{border-top:0}.tick input{width:22px;height:22px;flex:none;accent-color:var(--go)}.tick span{flex:1;overflow-wrap:anywhere}.tick em{font-style:normal;font-size:13px;color:var(--mute)}
 details{border-top:1px solid var(--line);padding:10px 0}details:first-of-type{border-top:0}summary{cursor:pointer;font-weight:600}#say{min-height:22px;margin:10px 0 0;color:var(--go);font-weight:600}#say.bad{color:var(--bad)}[hidden]{display:none!important}
 .av{width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px}.pr{display:flex;align-items:center;gap:6px;padding:7px 0;border-top:1px solid var(--line)}.pr:first-child{border-top:0}.pr .fc{flex:none;width:44px;height:44px;padding:0;border:1px dashed var(--mute);border-radius:50%;background:var(--line);color:var(--mute);font:600 11px/1.1 inherit;cursor:pointer;overflow:hidden}.pr .fc img{display:block;width:100%;height:100%;object-fit:cover}.pr .mid{flex:1;min-width:0}.pr input{width:100%}.pr b{display:block;font-size:12px;font-weight:600;color:var(--mute);margin-top:2px}.pr .ok,.pr .xx{flex:none;width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:none;color:var(--mute);font:inherit;font-size:18px;cursor:pointer}.pr .xx{border:0;font-size:20px;width:30px}.pr.right .ok{background:var(--go);border-color:var(--go);color:var(--goink)}.pr.right input{border-color:var(--go);background:var(--soft)}
-#pk{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;background:#000;color:#fff}#pkh{flex:none;padding:10px 14px;font-size:14px}#pks{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}#pkw{position:relative;width:100%}#pkw canvas{display:block;width:100%;height:auto}#pkc{position:absolute;box-sizing:border-box;border:3px solid #3ccf83;border-radius:50%;box-shadow:0 0 0 2000px rgba(0,0,0,.35);touch-action:none;cursor:grab}#pkf{flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#111}#pkf .row{align-items:center}#pkf label{margin:0;color:#ccc;flex:0 0 auto}#pkf input{flex:1;padding:0;border:0;background:none}#pkf button{flex:1;min-height:44px}
+#pk{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;background:#000;color:#fff}#pkh{flex:none;padding:10px 14px;font-size:14px}#pks{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}#pkw{position:relative;width:100%;touch-action:pan-x pan-y}#pkw canvas{display:block;width:100%;height:auto}#pkc{position:absolute;box-sizing:border-box;border:3px solid #3ccf83;border-radius:50%;box-shadow:0 0 0 2000px rgba(0,0,0,.35);touch-action:none;cursor:grab}#pkf{flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#111}#pkf .row{align-items:center}#pkf label{margin:0;color:#ccc;flex:0 0 auto}#pkf input{flex:1;padding:0;border:0;background:none}#pkf button{flex:1;min-height:44px}#pkf .zz{flex:0 0 52px;font-size:22px;color:#fff}
+#ed{position:fixed;inset:0;z-index:15;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6)}#ed>div{width:100%;max-width:400px;max-height:100%;overflow:auto;background:var(--card);border-radius:14px;padding:16px}#edf{display:block;width:84px;height:84px;margin:0 auto 10px;border-radius:50%;object-fit:cover;background:var(--line)}#ed .row{margin-top:8px}.rg{cursor:pointer;justify-content:flex-start;padding:10px 30px 10px 8px;text-align:left}.av{flex:none}
 </style></head><body><main>
 <h1>Soccer split</h1>
 <section id="top"><p class="big" id="head">Loading…</p><p class="sub" id="line"></p><div class="bar" id="barw" hidden><i id="bar"></i></div><p class="sub" id="count"></p></section>
@@ -26,8 +27,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:first-of-type{bo
 <section class="card"><h2>Who has paid</h2><p class="sub hint">Tap a name to mark it paid, or tap again to undo.</p><div class="names" id="ticks"></div></section>
 <section class="card"><h2>New week</h2><label for="wl">When</label><input id="wl" type="date"><label for="wc">Total rental cost</label><input id="wc" inputmode="decimal" placeholder="120"><label>Who is in</label><p class="sub hint">Tap a name to leave them out this week.</p><div class="names" id="wn"></div><button class="go" id="wgo" type="button">Start this week</button></section>
 <section class="card" id="pollc" hidden><h2>Check the names</h2><p class="sub hint" id="polls"></p><div id="pollr"></div><button class="ghost" id="pollmore" type="button" style="margin-top:10px;width:100%" hidden>Read a closer picture</button><button class="go" id="pollgo" type="button" hidden></button><button class="ghost" id="pollno" type="button" style="margin-top:8px;width:100%">Cancel</button></section>
-<div id="pk" hidden><div id="pkh">Drag the circle onto their face, or tap the face.</div><div id="pks"><div id="pkw"><div id="pkc"></div></div></div><div id="pkf"><div class="row"><label for="pkz">Size</label><input id="pkz" type="range" min="20" max="400"></div><div class="row"><button class="ghost" id="pkn" type="button" style="color:#fff">No picture</button><button class="ghost" id="pkb" type="button" style="color:#fff">Back</button></div><button class="go" id="pku" type="button" style="margin:0">Use this picture</button></div></div>
-<section class="card"><h2>Your regulars</h2><button class="ghost" id="pollb" type="button" style="width:100%;margin-bottom:10px">Add from poll picture</button><input id="pf" type="file" accept="image/*" hidden><div class="names" id="rc"></div><div class="add"><input id="ra" maxlength="22" placeholder="First name" aria-label="Add a regular"><button class="ghost" id="radd" type="button">Add</button></div><label for="rp">Pay who (your first name)</label><input id="rp" maxlength="22"></section>
+<div id="ed" hidden><div><img id="edf" alt=""><label for="edn">Name</label><input id="edn" maxlength="22"><p id="eds" class="sub" style="font-size:14px;margin-top:6px"></p><button class="go" id="edgo" type="button">Save name</button><div class="row"><button class="ghost" id="edp" type="button">Pick a picture</button><button class="ghost" id="edr" type="button">Remove picture</button></div><button class="ghost" id="edx" type="button" style="width:100%;margin-top:8px">Close</button></div></div>
+<div id="pk" hidden><div id="pkh">Pinch to zoom. Drag the circle onto their face, or tap the face.</div><div id="pks"><div id="pkw"><div id="pkc"></div></div></div><div id="pkf"><div class="row"><button class="ghost zz" id="pkm" type="button" aria-label="Zoom out">−</button><button class="ghost zz" id="pkp" type="button" aria-label="Zoom in">+</button><label for="pkz">Circle size</label><input id="pkz" type="range" min="20" max="400"></div><div class="row"><button class="ghost" id="pkn" type="button" style="color:#fff">No picture</button><button class="ghost" id="pkb" type="button" style="color:#fff">Back</button></div><button class="go" id="pku" type="button" style="margin:0">Use this picture</button></div></div>
+<section class="card"><h2>Your regulars</h2><button class="ghost" id="pollb" type="button" style="width:100%;margin-bottom:10px">Add from poll picture</button><input id="pf" type="file" accept="image/*" hidden><input id="ef" type="file" accept="image/*" hidden><p class="sub hint" style="margin:0 0 10px">Tap a card to change a name or picture.</p><div class="names" id="rc"></div><div class="add"><input id="ra" maxlength="22" placeholder="First name" aria-label="Add a regular"><button class="ghost" id="radd" type="button">Add</button></div><label for="rp">Pay who (your first name)</label><input id="rp" maxlength="22"></section>
 <section class="card"><h2>Past weeks</h2><div id="hist"></div></section>
 </div></main>
 <script>
@@ -57,7 +59,7 @@ function drawBook(){
  var H=D.history||[],T=el('ticks');T.textContent='';
  if(H[0])H[0].in.forEach(function(n){card(T,H[0],n,!!H[0].paid[n]);});else T.textContent='No week yet.';
  if(document.activeElement!==el('rp'))el('rp').value=D.pay||'';
- var R=el('rc');R.textContent='';(D.regulars||[]).forEach(function(n){var c=document.createElement('div');c.className='rg';c.textContent=n;face(c,n);var x=document.createElement('button');x.type='button';x.textContent='×';x.setAttribute('aria-label','Remove '+n);x.onclick=function(){saveRegs(D.regulars.filter(function(y){return y!==n;}),n+' removed.');};c.appendChild(x);R.appendChild(c);});if(!(D.regulars||[]).length)R.textContent='Add your regulars below.';
+ var R=el('rc');R.textContent='';(D.regulars||[]).forEach(function(n){var c=document.createElement('div');c.className='rg';c.textContent=n;c.setAttribute('role','button');c.tabIndex=0;c.onclick=function(){openEd(n);};face(c,n);var x=document.createElement('button');x.type='button';x.textContent='×';x.setAttribute('aria-label','Remove '+n);x.onclick=function(e){e.stopPropagation();saveRegs(D.regulars.filter(function(y){return y!==n;}),n+' removed.');};c.appendChild(x);R.appendChild(c);});if(!(D.regulars||[]).length)R.textContent='Add your regulars below.';
  var W=el('wn');W.textContent='';(D.regulars||[]).forEach(function(n){var b=document.createElement('button');b.type='button';b.className='n '+(OUT[n]?'off':'on');b.textContent=n;face(b,n);b.onclick=function(){OUT[n]=!OUT[n];b.className='n '+(OUT[n]?'off':'on');};W.appendChild(b);});if(!(D.regulars||[]).length)W.textContent='Add your regulars first.';
  var Y=el('hist');Y.textContent='';H.slice(1).forEach(function(w){var d=document.createElement('details'),s=document.createElement('summary'),n=Object.keys(w.paid).length;s.textContent=w.label+' · paid '+n+' of '+w.in.length;d.appendChild(s);var b=document.createElement('div');b.className='names';b.style.marginTop='10px';w.in.forEach(function(x){card(b,w,x,!!w.paid[x]);});d.appendChild(b);Y.appendChild(d);});if(H.length<2)Y.textContent='None yet.';
 }
@@ -72,12 +74,18 @@ function median(a){var b=a.slice().sort(function(x,y){return x-y;});return b.len
 function peopleIn(lines,W){
  var clean=function(t){return String(t||'').replace(/\s+/g,' ').replace(/^[^\p{L}\p{N}@_.]+|[^\p{L}\p{N}_.]+$/gu,'').trim();};
  var A=lines.filter(function(l){return clean(l.text).length>1;});if(!A.length)return [];
- var h=median(A.map(function(l){return l.bbox.y1-l.bbox.y0;})),left=median(A.map(function(l){return l.bbox.x0;})),out=[],p=null;
+ var out=[],p=null,
+  // Where names start: the first clear word of each line, as a picture read as text
+  // pulls a line's own left edge over to the picture.
+  firsts=A.map(function(l){var w=(l.words||[]).filter(function(x){return x.confidence>=60&&clean(x.text).length>2;})[0];return w?w.bbox:null;}).filter(Boolean),
+  h=median(firsts.map(function(b){return b.y1-b.y0;}))||median(A.map(function(l){return l.bbox.y1-l.bbox.y0;})),
+  left=median(firsts.map(function(b){return b.x0;}))||median(A.map(function(l){return l.bbox.x0;}));
  // Word by word: the reader can run a picture into the name beside it, and a Follow
  // button into the end of it.
  var L=A.map(function(l){
-  // Words clearly left of the list are a heading across the page, not a person.
-  if((l.words||[]).some(function(w){return w.bbox.x0<left-h&&w.confidence>=60;}))return null;
+  // Words clearly left of the list are a heading across the page, not a person. A
+  // letter or two there is only a picture read as text.
+  if((l.words||[]).some(function(w){return w.bbox.x0<left-h&&w.confidence>=60&&clean(w.text).length>2;}))return null;
   var ws=(l.words||[]).filter(function(w){var c=clean(w.text);return c&&w.bbox.x0>=left-h&&w.bbox.x0<W*0.8&&!BTN.test(c);});
   if(!ws.length)return null;
   return {t:ws.map(function(w){return clean(w.text);}).join(' '),x0:ws[0].bbox.x0,y0:l.bbox.y0,y1:l.bbox.y1,c:Math.max.apply(null,ws.map(function(w){return w.confidence;}))};
@@ -119,13 +127,19 @@ function drawPoll(){
  el('pollmore').hidden=!POLL.length;count();
 }
 // Pick a picture by hand on his own screenshot, which stays on this phone.
-var PK=null;
+var PK=null,ZM=1,ZMAX=8;
+function zoomTo(z,cx,cy){
+ // Keeps what is under (cx,cy) on screen in the same place; the middle by default.
+ var s=el('pks'),r=s.getBoundingClientRect(),w=el('pkw');z=Math.max(1,Math.min(ZMAX,z));if(cx===undefined){cx=r.left+r.width/2;cy=r.top+r.height/2;}
+ var ix=(s.scrollLeft+cx-r.left)/w.clientWidth,iy=(s.scrollTop+cy-r.top)/w.clientHeight;
+ ZM=z;w.style.width=z*100+'%';placePick();s.scrollLeft=ix*w.clientWidth-(cx-r.left);s.scrollTop=iy*w.clientHeight-(cy-r.top);
+}
 function placePick(){var p=PK,cv=p.shot,w=el('pkw').clientWidth/cv.width,c=el('pkc'),d=p.box.d*w;c.style.width=c.style.height=d+'px';c.style.left=(p.box.x*w-d/2)+'px';c.style.top=(p.box.y*w-d/2)+'px';}
 function openPick(p){
  if(!p.shot){say('Read the picture again to pick from it.',1);return;}
  PK=p;p.box=p.box||{x:p.shot.width/4,y:p.shot.height/4,d:p.shot.width/8};
  var w=el('pkw'),old=w.querySelector('canvas');if(old)old.remove();w.insertBefore(p.shot,el('pkc'));
- var z=el('pkz');z.max=Math.round(p.shot.width/2);z.value=p.box.d;el('pk').hidden=false;placePick();
+ var z=el('pkz');z.max=Math.round(p.shot.width/2);z.value=p.box.d;ZM=1;w.style.width='100%';el('pk').hidden=false;placePick();
  el('pks').scrollTop=Math.max(0,p.box.y*(w.clientWidth/p.shot.width)-el('pks').clientHeight/2);
 }
 function closePick(){el('pk').hidden=true;PK=null;}
@@ -133,10 +147,29 @@ function pickTo(e){var p=PK,r=el('pkw').getBoundingClientRect(),k=p.shot.width/r
 (function(){var c=el('pkc'),on=false;c.addEventListener('pointerdown',function(e){on=true;c.setPointerCapture(e.pointerId);e.preventDefault();});c.addEventListener('pointermove',function(e){if(on)pickTo(e);});['pointerup','pointercancel'].forEach(function(k){c.addEventListener(k,function(){on=false;});});
  el('pkw').addEventListener('click',function(e){if(PK&&e.target!==c)pickTo(e);});
  el('pkz').oninput=function(){if(PK){PK.box.d=+this.value;placePick();}};
- el('pku').onclick=function(){if(!PK)return;PK.pic=cut(PK.shot,PK.box);closePick();drawPoll();};
- el('pkn').onclick=function(){if(!PK)return;PK.pic='';closePick();drawPoll();};
+ // The buttons zoom around the circle, so it stays under his eye.
+ var around=function(z){var k=c.getBoundingClientRect();zoomTo(z,k.left+k.width/2,k.top+k.height/2);};
+ el('pkp').onclick=function(){if(PK)around(ZM*1.5);};el('pkm').onclick=function(){if(PK)around(ZM/1.5);};
+ // Pinch by hand, so the page itself stays still and only the screenshot zooms.
+ var S=el('pks'),pin=null,gap=function(t){return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);};
+ S.addEventListener('touchstart',function(e){if(e.touches.length===2){pin={d:gap(e.touches),z:ZM};e.preventDefault();}},{passive:false});
+ S.addEventListener('touchmove',function(e){if(pin&&e.touches.length===2&&PK){e.preventDefault();zoomTo(pin.z*gap(e.touches)/pin.d,(e.touches[0].clientX+e.touches[1].clientX)/2,(e.touches[0].clientY+e.touches[1].clientY)/2);}},{passive:false});
+ S.addEventListener('touchend',function(e){if(e.touches.length<2)pin=null;});
+ ['gesturestart','gesturechange'].forEach(function(k){el('pk').addEventListener(k,function(e){e.preventDefault();});});
+ el('pku').onclick=function(){if(!PK)return;var p=PK;p.pic=cut(p.shot,p.box);closePick();if(p.done)p.done();else drawPoll();};
+ el('pkn').onclick=function(){if(!PK)return;var p=PK;p.pic='';closePick();if(p.done)p.done();else drawPoll();};
  el('pkb').onclick=closePick;
 })();
+// A person's card, any time: name and picture. Saves as he goes, booker only.
+var ED='';
+function openEd(n){ED=n;var f=el('edf'),u=D.pics&&D.pics[n];el('edn').value=n;el('eds').textContent='';f.hidden=!u;if(u)f.src=u;el('edr').hidden=!u;el('ed').hidden=false;}
+function closeEd(){ED='';el('ed').hidden=true;el('ef').value='';}
+function savePic(u){var n=ED;post('book',{action:'picture',name:n,pic:u}).then(function(r){if(!r.ok){el('eds').textContent=r.error||'Not saved. Try again.';return;}return load().then(function(){if(ED===n)openEd(n);say(u?'Picture saved.':'Picture removed.');});}).catch(function(){el('eds').textContent='Not saved. Try again.';});}
+el('edx').onclick=closeEd;
+el('edr').onclick=function(){savePic('');};
+el('edp').onclick=function(){el('ef').click();};
+el('ef').onchange=function(){var file=this.files[0];if(!file)return;el('eds').textContent='Opening your picture…';picIn(file).then(function(pic){var W=pic.img.naturalWidth,H=pic.img.naturalHeight,sc=Math.min(1,1500/W),cv=document.createElement('canvas');cv.width=Math.round(W*sc);cv.height=Math.round(H*sc);cv.getContext('2d').drawImage(pic.img,0,0,cv.width,cv.height);URL.revokeObjectURL(pic.url);el('eds').textContent='';var p={shot:cv,box:{x:cv.width/2,y:cv.height/4,d:cv.width/6},pic:''};p.done=function(){if(p.pic)savePic(p.pic);};openPick(p);}).catch(function(e){el('eds').textContent=e.message;});el('ef').value='';};
+el('edgo').onclick=function(){var to=el('edn').value.trim(),b=this;if(!to||to===ED){closeEd();return;}b.disabled=true;post('book',{action:'rename',from:ED,to:to}).then(function(r){b.disabled=false;if(!r.ok){el('eds').textContent=r.error||'Not saved. Try again.';return;}closeEd();say('Now '+r.name+'.');load();}).catch(function(){b.disabled=false;el('eds').textContent='Not saved. Try again.';});};
 function todayLabel(){return new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
 function todayWeek(){var w=D.week;return w&&w.label===todayLabel()?w:null;}
 function closePoll(){POLL=[];el('pollc').hidden=true;el('pollr').textContent='';el('pf').value='';closePick();var w=el('pkw').querySelector('canvas');if(w)w.remove();}
