@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta http-equiv="Cache-Control" content="no-cache"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://soccer-split.fahiimiislam.workers.dev; base-uri 'none'; form-action 'none'"><title>Soccer split</title>
+<meta http-equiv="Cache-Control" content="no-cache"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'self' https://soccer-split.fahiimiislam.workers.dev; base-uri 'none'; form-action 'none'"><title>Soccer split</title>
 <style>
 :root{--bg:#f6f7f5;--card:#fff;--ink:#16201a;--mute:#5d6a62;--line:#dfe4df;--go:#14804a;--goink:#fff;--soft:#e7f3ec;--bad:#b3261e}
 @media (prefers-color-scheme:dark){:root{--bg:#101512;--card:#18201b;--ink:#eef3ef;--mute:#9aa8a0;--line:#2b352f;--go:#3ccf83;--goink:#07190f;--soft:#1c3226;--bad:#ff8a80}}
@@ -14,6 +14,7 @@ button.go{width:100%;min-height:48px;border:0;border-radius:11px;background:var(
 .n small{display:block;font-size:12px;font-weight:400;color:var(--mute)}.n.on{background:var(--soft);border-color:var(--go)}.n.off{color:var(--mute);border-style:dashed}.hint{font-size:14px;margin:-4px 0 10px}.add{display:flex;gap:8px;margin-top:10px}.add input{flex:1;min-width:0}.rg{position:relative;display:flex;align-items:center;justify-content:center;min-height:48px;padding:10px 34px;border:1px solid var(--line);border-radius:11px;font-weight:600;overflow-wrap:anywhere;text-align:center}.rg button{position:absolute;right:2px;top:2px;bottom:2px;width:32px;border:0;background:none;color:var(--mute);font:inherit;font-size:18px;cursor:pointer}input[type=date]{min-height:46px;-webkit-appearance:none;appearance:none}
 .tick{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 2px;border-top:1px solid var(--line);color:var(--ink);font-size:16px;margin:0}.tick:first-child{border-top:0}.tick input{width:22px;height:22px;flex:none;accent-color:var(--go)}.tick span{flex:1;overflow-wrap:anywhere}.tick em{font-style:normal;font-size:13px;color:var(--mute)}
 details{border-top:1px solid var(--line);padding:10px 0}details:first-of-type{border-top:0}summary{cursor:pointer;font-weight:600}#say{min-height:22px;margin:10px 0 0;color:var(--go);font-weight:600}#say.bad{color:var(--bad)}[hidden]{display:none!important}
+.av{width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px}.pr{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line)}.pr:first-child{border-top:0}.pr img,.pr i{flex:none;width:40px;height:40px;border-radius:50%;object-fit:cover;background:var(--line)}.pr input{flex:1;min-width:0}.pr b{flex:none;font-size:12px;font-weight:600;color:var(--mute)}.pr button{flex:none;width:36px;height:36px;border:0;background:none;color:var(--mute);font:inherit;font-size:20px;cursor:pointer}
 </style></head><body><main>
 <h1>Soccer split</h1>
 <section id="top"><p class="big" id="head">Loading…</p><p class="sub" id="line"></p><div class="bar" id="barw" hidden><i id="bar"></i></div><p class="sub" id="count"></p></section>
@@ -23,7 +24,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:first-of-type{bo
 <section class="card"><h2>Share with the group</h2><div class="row"><button class="ghost" id="copylink" type="button">Copy link</button><button class="ghost" id="copymsg" type="button">Copy the message</button></div></section>
 <section class="card"><h2>Who has paid</h2><p class="sub hint">Tap a name to mark it paid, or tap again to undo.</p><div class="names" id="ticks"></div></section>
 <section class="card"><h2>New week</h2><label for="wl">When</label><input id="wl" type="date"><label for="wc">Total rental cost</label><input id="wc" inputmode="decimal" placeholder="120"><label>Who is in</label><p class="sub hint">Tap a name to leave them out this week.</p><div class="names" id="wn"></div><button class="go" id="wgo" type="button">Start this week</button></section>
-<section class="card"><h2>Your regulars</h2><div class="names" id="rc"></div><div class="add"><input id="ra" maxlength="22" placeholder="First name" aria-label="Add a regular"><button class="ghost" id="radd" type="button">Add</button></div><label for="rp">Pay who (your first name)</label><input id="rp" maxlength="22"></section>
+<section class="card" id="pollc" hidden><h2>Check the names</h2><p class="sub hint" id="polls"></p><div id="pollr"></div><button class="go" id="pollgo" type="button" hidden></button><button class="ghost" id="pollno" type="button" style="margin-top:8px;width:100%">Cancel</button></section>
+<section class="card"><h2>Your regulars</h2><button class="ghost" id="pollb" type="button" style="width:100%;margin-bottom:10px">Add from poll picture</button><input id="pf" type="file" accept="image/*" hidden><div class="names" id="rc"></div><div class="add"><input id="ra" maxlength="22" placeholder="First name" aria-label="Add a regular"><button class="ghost" id="radd" type="button">Add</button></div><label for="rp">Pay who (your first name)</label><input id="rp" maxlength="22"></section>
 <section class="card"><h2>Past weeks</h2><div id="hist"></div></section>
 </div></main>
 <script>
@@ -44,17 +46,89 @@ function draw(){
  if(w){var me=mine(),N=el('names');N.textContent='';w.names.forEach(function(n){var b=document.createElement('button');b.type='button';b.className='n'+(me[w.id]===n?' me':'');b.textContent=(me[w.id]===n?'✓ ':'')+n;b.onclick=function(){if(me[w.id]===n){say('You are already marked paid, '+n+'.');return;}if(!confirm('Mark '+n+' as paid?'))return;b.disabled=true;post('paid',{name:n}).then(function(r){b.disabled=false;if(!r.ok){say(r.error||'Not saved. Try again.',1);return;}var m=mine();m[w.id]=n;keep(m);say('Thanks, '+n+'. You are marked paid.');load();}).catch(function(){b.disabled=false;say('Not saved. Check your connection and try again.',1);});};N.appendChild(b);});}
  el('book').hidden=!D.booker;if(D.booker)drawBook();
 }
-function card(h,w,n,on){var b=document.createElement('button');b.type='button';b.className='n'+(on?' on':'');b.textContent=(on?'✓ ':'')+n;if(on&&w.paid[n]){var e=document.createElement('small');e.textContent='Paid '+new Date(w.paid[n]).toLocaleDateString(undefined,{month:'short',day:'numeric'});b.appendChild(e);}b.onclick=function(){b.disabled=true;post('book',{action:'tick',week:w.id,name:n,paid:!on}).then(function(r){if(!r.ok)say(r.error,1);load();}).catch(function(){b.disabled=false;say('Not saved. Try again.',1);});};h.appendChild(b);}
+// A picture, on the booker's own cards only; the group's list above has none.
+function face(b,n){var u=D.pics&&D.pics[n];if(!u)return;var i=document.createElement('img');i.className='av';i.alt='';i.src=u;b.insertBefore(i,b.firstChild);}
+function card(h,w,n,on){var b=document.createElement('button');b.type='button';b.className='n'+(on?' on':'');b.textContent=(on?'✓ ':'')+n;face(b,n);if(on&&w.paid[n]){var e=document.createElement('small');e.textContent='Paid '+new Date(w.paid[n]).toLocaleDateString(undefined,{month:'short',day:'numeric'});b.appendChild(e);}b.onclick=function(){b.disabled=true;post('book',{action:'tick',week:w.id,name:n,paid:!on}).then(function(r){if(!r.ok)say(r.error,1);load();}).catch(function(){b.disabled=false;say('Not saved. Try again.',1);});};h.appendChild(b);}
 function saveRegs(list,done){post('book',{action:'regulars',names:list,pay:el('rp').value}).then(function(r){if(r.ok){say(done);load();}else say(r.error,1);}).catch(function(){say('Not saved. Try again.',1);});}
 var OUT={};
 function drawBook(){
  var H=D.history||[],T=el('ticks');T.textContent='';
  if(H[0])H[0].in.forEach(function(n){card(T,H[0],n,!!H[0].paid[n]);});else T.textContent='No week yet.';
  if(document.activeElement!==el('rp'))el('rp').value=D.pay||'';
- var R=el('rc');R.textContent='';(D.regulars||[]).forEach(function(n){var c=document.createElement('div');c.className='rg';c.textContent=n;var x=document.createElement('button');x.type='button';x.textContent='×';x.setAttribute('aria-label','Remove '+n);x.onclick=function(){saveRegs(D.regulars.filter(function(y){return y!==n;}),n+' removed.');};c.appendChild(x);R.appendChild(c);});if(!(D.regulars||[]).length)R.textContent='Add your regulars below.';
- var W=el('wn');W.textContent='';(D.regulars||[]).forEach(function(n){var b=document.createElement('button');b.type='button';b.className='n '+(OUT[n]?'off':'on');b.textContent=n;b.onclick=function(){OUT[n]=!OUT[n];b.className='n '+(OUT[n]?'off':'on');};W.appendChild(b);});if(!(D.regulars||[]).length)W.textContent='Add your regulars first.';
+ var R=el('rc');R.textContent='';(D.regulars||[]).forEach(function(n){var c=document.createElement('div');c.className='rg';c.textContent=n;face(c,n);var x=document.createElement('button');x.type='button';x.textContent='×';x.setAttribute('aria-label','Remove '+n);x.onclick=function(){saveRegs(D.regulars.filter(function(y){return y!==n;}),n+' removed.');};c.appendChild(x);R.appendChild(c);});if(!(D.regulars||[]).length)R.textContent='Add your regulars below.';
+ var W=el('wn');W.textContent='';(D.regulars||[]).forEach(function(n){var b=document.createElement('button');b.type='button';b.className='n '+(OUT[n]?'off':'on');b.textContent=n;face(b,n);b.onclick=function(){OUT[n]=!OUT[n];b.className='n '+(OUT[n]?'off':'on');};W.appendChild(b);});if(!(D.regulars||[]).length)W.textContent='Add your regulars first.';
  var Y=el('hist');Y.textContent='';H.slice(1).forEach(function(w){var d=document.createElement('details'),s=document.createElement('summary'),n=Object.keys(w.paid).length;s.textContent=w.label+' · paid '+n+' of '+w.in.length;d.appendChild(s);var b=document.createElement('div');b.className='names';b.style.marginTop='10px';w.in.forEach(function(x){card(b,w,x,!!w.paid[x]);});d.appendChild(b);Y.appendChild(d);});if(H.length<2)Y.textContent='None yet.';
 }
+// The poll picture stays on this phone: it is read here, and only the names and
+// small crops he approves are sent. The reader is in ocr/, one fixed version
+// (tesseract.js 5.1.1), and loads only when he presses the button.
+var POLL=[],OCR='ocr/',BTN=/^(foll(ow(ing)?)?|message|remove|requested)$/i,JUNK=/^(voters?|votes?|views?|viewers?|poll|polls|results?|yes|no|maybe|see all|follow(ing)?|message|send|add|close|done|edit|activity|seen by|\d+\s*%|\d+\s*(votes?|views?|viewers?)?|\d{1,2}[:.]\d{2}.*)$/i;
+function scriptIn(src){return new Promise(function(ok,no){if(window.Tesseract)return ok();var s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=function(){no(new Error('The reader did not load.'));};document.head.appendChild(s);});}
+function picIn(file){return new Promise(function(ok,no){var u=URL.createObjectURL(file),i=new Image();i.onload=function(){ok({img:i,url:u});};i.onerror=function(){URL.revokeObjectURL(u);no(new Error('That picture could not be opened.'));};i.src=u;});}
+function median(a){var b=a.slice().sort(function(x,y){return x-y;});return b.length?b[b.length>>1]:0;}
+// Each person: a bold handle, sometimes a full name under it, a round picture to the left.
+function peopleIn(lines,W){
+ var clean=function(t){return String(t||'').replace(/\s+/g,' ').replace(/^[^\p{L}\p{N}@_.]+|[^\p{L}\p{N}_.]+$/gu,'').trim();};
+ var A=lines.filter(function(l){return clean(l.text).length>1;});if(!A.length)return [];
+ var h=median(A.map(function(l){return l.bbox.y1-l.bbox.y0;})),left=median(A.map(function(l){return l.bbox.x0;})),out=[],p=null;
+ // Word by word: the reader can run a picture into the name beside it, and a Follow
+ // button into the end of it.
+ var L=A.map(function(l){
+  var ws=(l.words||[]).filter(function(w){var c=clean(w.text);return c&&w.bbox.x0>=left-h&&w.bbox.x0<W*0.8&&!BTN.test(c);});
+  if(!ws.length)return null;
+  return {t:ws.map(function(w){return clean(w.text);}).join(' '),x0:ws[0].bbox.x0,y0:l.bbox.y0,y1:l.bbox.y1,c:Math.max.apply(null,ws.map(function(w){return w.confidence;}))};
+ }).filter(function(l){return l&&l.t.length>1&&l.c>=25&&!JUNK.test(l.t)&&l.x0>W*0.06;}).sort(function(x,y){return x.y0-y.y0;});
+ L.forEach(function(l){if(p&&!p.full&&l.y0-p.y1<0.9*h){p.full=l.t;p.y1=l.y1;}else{p={handle:l.t,full:'',x0:l.x0,y0:l.y0,y1:l.y1};out.push(p);}});
+ return out;
+}
+function suggest(p){var f=p.full.split(' ')[0].replace(/[^\p{L}'’-]/gu,'');if(f.length>1)return f.charAt(0).toUpperCase()+f.slice(1);var parts=p.handle.replace(/^@/,'').split(/[._\d]/).filter(Boolean),w=parts.filter(function(x){return x.length>1;})[0]||parts[0]||'';return w.charAt(0).toUpperCase()+w.slice(1);}
+// The round picture is whatever stands out from the background left of the name.
+function faceBox(ctx,p,pitch){
+ var cy=(p.y0+p.y1)/2,x1=Math.max(1,Math.floor(p.x0-2)),y0=Math.max(0,Math.floor(cy-pitch/2)),h=Math.floor(pitch);
+ if(x1<8||h<8)return null;
+ var d=ctx.getImageData(0,y0,x1,h).data,bg=[d[0],d[1],d[2]],hit=function(x,y){var i=(y*x1+x)*4;return Math.abs(d[i]-bg[0])+Math.abs(d[i+1]-bg[1])+Math.abs(d[i+2]-bg[2])>40;},row=[],x,y;
+ for(y=0;y<h;y++){row[y]=0;for(x=0;x<x1&&!row[y];x++)if(hit(x,y))row[y]=1;}
+ // The run of rows at the name's own height, so a heading above it stays out.
+ var m=Math.floor(cy-y0);if(!row[m]){var g=1;while(g<h&&!row[m+g]&&!row[m-g])g++;m=row[m+g]?m+g:m-g;}
+ if(!row[m])return null;
+ var b=m,e=m,a=x1,c=-1;while(b>0&&row[b-1])b--;while(e<h-1&&row[e+1])e++;
+ for(y=b;y<=e;y++)for(x=0;x<x1;x++)if(hit(x,y)){if(x<a)a=x;if(x>c)c=x;}
+ var w=c-a+1,t=e-b+1;if(c<0||w<0.3*pitch||t<0.3*pitch||w/t>1.4||t/w>1.4)return null;
+ return {x:a+w/2,y:y0+b+t/2,d:Math.max(w,t)};
+}
+function crop(cv,p,pitch){
+ var ctx=cv.getContext('2d'),f=faceBox(ctx,p,pitch),d=f?f.d:Math.min(0.74*pitch,p.x0*0.9),cx=f?f.x:Math.max(p.x0-0.2*pitch-d/2,d/2),cy=f?f.y:(p.y0+p.y1)/2,s=64,c=document.createElement('canvas');
+ c.width=c.height=s;c.getContext('2d').drawImage(cv,cx-d/2,cy-d/2,d,d,0,0,s,s);
+ var q=.72,u=c.toDataURL('image/jpeg',q);while(u.length>11000&&q>.3){q-=.1;u=c.toDataURL('image/jpeg',q);}return u.length>11000?'':u;
+}
+function onList(n){return (D.regulars||[]).some(function(x){return x.toLowerCase()===String(n).trim().toLowerCase();});}
+function drawPoll(){
+ var R=el('pollr'),go=el('pollgo');R.textContent='';
+ POLL.forEach(function(p,ix){var d=document.createElement('div');d.className='pr';var f;if(p.pic){f=document.createElement('img');f.alt='';f.src=p.pic;f.title='Tap to leave the picture out';f.onclick=function(){p.pic='';drawPoll();};}else f=document.createElement('i');d.appendChild(f);var i=document.createElement('input');i.value=p.name;i.maxLength=22;i.setAttribute('aria-label','Name');var t=document.createElement('b');var tag=function(){t.textContent=onList(i.value)?'On your list':'New';};tag();i.oninput=function(){p.name=i.value;tag();count();};var x=document.createElement('button');x.type='button';x.textContent='×';x.setAttribute('aria-label','Leave this one out');x.onclick=function(){POLL.splice(ix,1);drawPoll();};d.appendChild(i);d.appendChild(t);d.appendChild(x);R.appendChild(d);});
+ var count=function(){var n=POLL.filter(function(p){return p.name.trim();}).length;go.hidden=!n;go.textContent='Add '+n+(n===1?' person':' people')+' to '+(todayWeek()?'this session':'your list');};count();
+}
+function todayLabel(){return new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
+function todayWeek(){var w=D.week;return w&&w.label===todayLabel()?w:null;}
+function closePoll(){POLL=[];el('pollc').hidden=true;el('pollr').textContent='';el('pf').value='';}
+function readPoll(file){
+ var c=el('pollc'),s=el('polls'),worker=null;c.hidden=false;el('pollr').textContent='';el('pollgo').hidden=true;s.textContent='Opening your picture…';c.scrollIntoView({block:'start'});
+ picIn(file).then(function(pic){
+  return scriptIn(OCR+'tesseract.min.js').then(function(){s.textContent='Getting the reader ready. The first time takes a little while…';return Tesseract.createWorker('eng',1,{workerPath:OCR+'worker.min.js',corePath:OCR,langPath:OCR,gzip:true,workerBlobURL:false,logger:function(m){if(m.status==='recognizing text')s.textContent='Reading the names… '+Math.round((m.progress||0)*100)+'%';}});}).then(function(w){worker=w;
+   var W=pic.img.naturalWidth,H=pic.img.naturalHeight,sc=Math.min(1,1500/W),cv=document.createElement('canvas');cv.width=Math.round(W*sc);cv.height=Math.round(H*sc);cv.getContext('2d').drawImage(pic.img,0,0,cv.width,cv.height);
+   return w.recognize(cv).then(function(r){return {r:r,cv:cv};});
+  }).then(function(o){
+   var lines=[];(o.r.data.blocks||[]).forEach(function(b){(b.paragraphs||[]).forEach(function(p){lines=lines.concat(p.lines||[]);});});if(!lines.length)lines=o.r.data.lines||[];
+   var ppl=peopleIn(lines,o.cv.width),pitch=median(ppl.slice(1).map(function(p,i){return p.y0-ppl[i].y0;}))||((ppl[0]?ppl[0].y1-ppl[0].y0:40)*2.4),seen={};
+   POLL=[];ppl.forEach(function(p){var n=suggest(p);if(!n||seen[n.toLowerCase()])return;seen[n.toLowerCase()]=1;POLL.push({name:n,pic:crop(o.cv,p,pitch),from:p.handle});});
+   URL.revokeObjectURL(pic.url);
+   s.textContent=POLL.length?'Fix any name it misread. Tap a picture to leave it out.':'No names found in that picture. Try a clearer one, or add them by hand.';drawPoll();
+  });
+ }).catch(function(e){s.textContent=(e&&e.message)||'That did not work. Try again.';}).then(function(){if(worker)worker.terminate();});
+}
+el('pollb').onclick=function(){el('pf').click();};
+el('pf').onchange=function(){if(this.files[0])readPoll(this.files[0]);};
+el('pollno').onclick=closePoll;
+el('pollgo').onclick=function(){var w=todayWeek(),b=this;b.disabled=true;post('book',{action:'poll',week:w?w.id:'',people:POLL.filter(function(p){return p.name.trim();}).map(function(p){return {name:p.name,pic:p.pic};})}).then(function(r){b.disabled=false;if(!r.ok){say(r.error||'Not saved. Try again.',1);return;}(r.names||[]).forEach(function(n){delete OUT[n];});closePoll();say(r.added+(r.added===1?' person':' people')+' added'+(w?' and in for '+w.label:', and in when you start today\'s week')+'.'+(r.full?' '+r.full+' left out: your list is full.':''),false);load();}).catch(function(){b.disabled=false;say('Not saved. Try again.',1);});};
 function load(){return api('week').then(function(r){if(!r.ok){el('head').textContent='This link does not work';el('line').textContent='Ask the person who booked for the right one.';return;}D=r;if(key&&!r.booker)say('That booker link is not right.',1);draw();}).catch(function(){say('Could not load. Check your connection.',1);});}
 el('copylink').onclick=function(){copy(link(),'Link copied.');};
 el('copymsg').onclick=function(){var w=D.week;if(!w){say('Start a week first.',1);return;}copy(w.label+', '+money(w.cur,w.each)+' each'+(D.pay?', pay '+D.pay:'')+'. Tap your name once you have paid:\n'+link(),'Message copied.');};
